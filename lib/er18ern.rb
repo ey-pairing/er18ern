@@ -191,8 +191,8 @@ module Er18Ern
             last_hash = hash
             last = Proc.new do |str|
               en_string = found_keys[k]
-              en_string_parts = strip_string(en_string).split("***").reject{|x| x.strip.empty? }
-              jp_string_parts = str.split("***").reject(&:empty?)
+              en_string_parts = strip_string(en_string).split("***")
+              jp_string_parts = str.split("***")
               en_string_parts.each_with_index do |part, index|
                 jp_corresponding = jp_string_parts[index] || "" # "MISSING TRANSLATION"
                 en_string = en_string.gsub(part.to_s, jp_corresponding)
