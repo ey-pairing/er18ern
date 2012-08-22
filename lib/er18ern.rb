@@ -7,13 +7,15 @@ module Er18Ern
 
     def call(env)
       request = Rack::Request.new(env)
-      request_locale = request.params["locale"] || request.cookies["locale"]
+      request_locale = request.params["locale"] || request.cookies["eylocale"]
       if request_locale && I18n.available_locales.include?(request_locale.to_sym)
         I18n.locale = request_locale
+      else
+        I18n.locale = I18n.default_locale
       end
       status, headers, body = @app.call(env)
       cookie = {:value => I18n.locale, :expires => Time.now + 10.days, :domain => request.host.gsub(/^[^\.]*/,"")}
-      Rack::Utils.set_cookie_header!(headers, "locale", cookie)
+      Rack::Utils.set_cookie_header!(headers, "eylocale", cookie)
       [status, headers, body]
     end
   end
