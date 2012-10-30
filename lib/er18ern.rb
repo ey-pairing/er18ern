@@ -174,6 +174,23 @@ module Er18Ern
       end
     end
 
+    def copy_missing_into!(place)
+      en_source_yaml["en"]
+      output = YAML::load_file(File.expand_path("#{place}.yml", self.locales_dir))
+      traverse = Proc.new do |x, y|
+        if x.is_a?(Hash)
+          x.each do |k, v|
+            y[k] ||= v
+            traverse.call(v, y[k])
+          end
+        end
+      end
+      traverse.call(en_source_yaml["en"], output[place])
+      File.open(File.expand_path("#{place}.yml", self.locales_dir), "w") do |fp|
+        fp.write(output.to_yaml)
+      end
+    end
+
     private
 
     def doitstuff(enstuff, found_keys, locale, stuff)
