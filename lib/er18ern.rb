@@ -14,7 +14,7 @@ module Er18Ern
         I18n.locale = I18n.default_locale
       end
       status, headers, body = @app.call(env)
-      cookie = {:value => I18n.locale, :expires => Time.now + 10.days, :domain => request.host.gsub(/^[^\.]*/,"")}
+      cookie = {:value => I18n.locale, :expires => Time.now + 10.days, :domain => request.host.gsub(/^[^\.]*/,""), :path => "/"}
       Rack::Utils.set_cookie_header!(headers, "eylocale", cookie)
       [status, headers, body]
     end
